@@ -5,28 +5,27 @@ from PySide6.QtWidgets import (
     QLabel, QLineEdit, QPushButton, QMessageBox,
 )
 import matplotlib.pyplot as plt
-
+from utilities.functions import FunctionPlotter
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
+        "This class contains all elements of the main window"
         self.setWindowTitle("Function Plotter")
-
         main_layout = QVBoxLayout()
         self.setLayout(main_layout)
         self.resize(800, 600)
-        # Upper part - Graph
+        # init Upper part(Graph)
         upper_layout = QVBoxLayout()
         self.figure = plt.figure()
         self.canvas = self.figure.canvas
         upper_layout.addWidget(self.canvas)
         main_layout.addLayout(upper_layout)
-
-        # Lower part - Input and Change Theme
+        # input Lower part (4 boxes layout)
         lower_layout = QGridLayout()
         main_layout.addLayout(lower_layout)
 
-        # First Box - Input
+        # First Box (handle first plot)
         first_box = QVBoxLayout()
         lower_layout.addLayout(first_box, 0, 0, 1, 1)
 
@@ -55,7 +54,7 @@ class MainWindow(QWidget):
         plot_button.clicked.connect(self.plot_expression)
         first_box.addWidget(plot_button)
 
-        # Second Box - Input
+        # Second Box (handle second plot)
         second_box = QVBoxLayout()
         lower_layout.addLayout(second_box, 0, 1, 1, 1)
 
@@ -84,7 +83,7 @@ class MainWindow(QWidget):
         plot_button2.clicked.connect(self.plot_expression2)
         second_box.addWidget(plot_button2)
 
-        # Third Box - Result
+        # Third Box (handle operations on result plot)
         third_box = QVBoxLayout()
         lower_layout.addLayout(third_box, 0, 2, 1, 1)
 
@@ -108,7 +107,7 @@ class MainWindow(QWidget):
         third_box.addWidget(subtract_button)
 
 
-        # Fourth Box - Change Color Buttons and Save Button
+        # Fourth Box (options box)
         color_box = QVBoxLayout()
         lower_layout.addLayout(color_box, 1, 0, 1, 3)
 
@@ -138,9 +137,10 @@ class MainWindow(QWidget):
         self.ax2 = None  # Reference to the second subplot
         self.ax3 = None  # Reference to the result subplot
 
-        
+        self.function_plotter = FunctionPlotter(self) 
 
     def plot_expression(self):
+
         self.function_plotter.plot_expression()
 
     def plot_expression2(self):
@@ -165,18 +165,14 @@ class MainWindow(QWidget):
         self.function_plotter.save_graph()
 
     def show_error_message(self, message):
-        error_dialog = QMessageBox()
-        error_dialog.setWindowTitle("Error")
-        error_dialog.setText(message)
-        error_dialog.setIcon(QMessageBox.Critical)
-        error_dialog.exec()
+        self.function_plotter.show_error_message(message)
 
 if __name__ == '__main__':
     app = QApplication([])
-    # create object icon
+    # Set the window icon
     icon = QImage('icon.png')
     pixmap = QPixmap.fromImage(icon)
-    # Set the window icon
+    #init main window
     app.setWindowIcon(pixmap)
     window = MainWindow()
     window.show()
