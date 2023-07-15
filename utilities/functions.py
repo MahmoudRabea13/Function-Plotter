@@ -237,6 +237,23 @@ class FunctionPlotter:
             QMessageBox.information(
                 self.window, "Graph Saved", "The graph has been saved successfully."
             )
+    
+    def clear_graph(self):
+        "Deletes all plotted graphs"
+        if self.window.ax1 is None and self.window.ax2 is None and self.window.ax3 is None:
+            self.show_error_message("You don't have anything to clear.")
+            return
+        if self.window.ax1 is not None:
+            self.window.figure.delaxes(self.window.ax1)
+            self.window.ax1 = None
+        if self.window.ax2 is not None:
+            self.window.figure.delaxes(self.window.ax2)
+            self.window.ax2 = None
+        if self.window.ax3 is not None:
+            self.window.figure.delaxes(self.window.ax3)
+            self.window.ax3 = None
+        self.window.canvas.draw()
+        QMessageBox.information(self.window, "Graph cleared", "The graph has been cleared successfully.")
     def show_error_message(self, message):
         "error message handler"
         error_dialog = QMessageBox()

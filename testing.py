@@ -31,8 +31,7 @@ def test_welcomewindow(welcome_window):
     if welcome_window.button.clicked.connect(welcome_window.open_main_window):
         assert welcome_window.close()
 
-# overall test cases : 19 (1 for welcome window / 10 for main features / 8 for error handliing )
-
+# overall test cases : 21 (1 for welcome window / 11 for main features / 9 for error handliing )
 
 ## ------------------Testing Error handling--------------------- ## 
 
@@ -107,11 +106,16 @@ def test_missing_graphs_for_operation(window):
 
 def test_save_graph_no_graph(window):
     "test erorr for saving empty graph"
-    
     # Trigger the save_graph method
     window.save_graph()
     # Verify that an error message is shown
     assert window.show_error_message
+
+def test_clear_empty_graph(window):
+    "test error for clearing empty graph"
+    window.clear_graph()
+    assert window.show_error_message
+
 
 ## ------------------Testing main app features--------------------- ## 
 
@@ -221,6 +225,21 @@ def test_save_graph(window):
     assert os.path.exists(save_path)
     # Clean up the temporary save file
     os.remove(save_path)
+
+# clear graph
+
+def test_clear_graph(window):
+    "test if graph is cleared successfully"
+    # Plot a graph 
+    window.ax1 = window.figure.add_subplot(111)
+    window.ax2 = window.figure.add_subplot(121)
+    window.ax3 = window.figure.add_subplot(122)
+
+    window.clear_graph()
+
+    assert window.ax1 is None
+    assert window.ax2 is None
+    assert window.ax3 is None
 
 if __name__ == '__main__':
     pytest.main(['-v', __file__])
